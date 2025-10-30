@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM & Array Manipulation</title>
+  </head>
+  <body>
+    <main>
+      <h1>DOM & Array Manipulation</h1>
+      <ul id="users">
+        <li data-age="25" data-role="student">Alice</li>
+        <li data-age="30" data-role="teacher">Bob</li>
+        <li data-role="student">Charlie</li>
+        <li data-age="28" data-role="student">Dana</li>
+        <li data-age="invalid" data-role="student">Eve</li>
+      </ul>
+    </main>
+
+    <script>
+      function getSortedItems() {
+        //Get all ellements by "data-role" attribute
+        const allItemsByRole = document.querySelectorAll(
+          'li[data-role="student"]'
+        );
+
+        // Set all items to array of objects
+        const items = [...allItemsByRole].map((item) => {
+          const name = item.textContent;
+          const ageAttr = item.getAttribute('data-age');
+          const age =
+            ageAttr && !isNaN(Number(ageAttr)) ? Number(ageAttr) : null;
+
+          return { name, age };
+        });
+
+        // Sort array by age property ascending
+        items.sort((a, b) => {
+          if (a.age === null && b.age === null) {
+            return 0;
+          } else if (a.age === null) {
+            return 1;
+          } else if (b.age === null) {
+            return -1;
+          }
+          return a.age - b.age;
+        });
+
+        return items;
+      }
+
+      //Log the sorted array placing students with null age at the end
+      const sortedStudents = getSortedItems();
+      console.log('Sorted students with null age at the end: ', sortedStudents);
+
+      // Get all students with valid age
+      const getValidAgeStudents = sortedStudents.filter(
+        (item) => item.age !== null
+      );
+
+      // Log the name of the youngest student
+      getValidAgeStudents.length > 0
+        ? console.log('Youngest student is: ', getValidAgeStudents[0].name)
+        : console.log('No students with valid age!');
+    </script>
+  </body>
+</html>
